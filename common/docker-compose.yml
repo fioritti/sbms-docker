@@ -1,0 +1,35 @@
+version: '3'
+services:
+ eurekaserver:
+  image: gfioritti/sbms-eurekasr:chapter5
+  ports:
+   - "8761:8761"
+ configserver:
+  image: gfioritti/sbms-confsvr:chapter5
+  ports:
+   - "8888:8888"
+  environment:
+   ENCRYPT_KEY: "weerT55667SSdfg"
+   EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+   EUREKASERVER_PORT: "8761"   
+ database:
+  image: postgres:9.5
+  ports:
+   - "5432:5432"
+  environment:
+   - POSTGRES_USER=postgres_dev
+   - POSTGRES_PASSWORD=p0stgr@s_dev
+   - POSTGRES_DB=eagle_eye_dev
+ organizationservice:
+  image: gfioritti/sbms-organization-service:chapter5
+  ports:
+   - "8085:8085"
+  environment:
+   PROFILE: "default"
+   SERVER_PORT: "8085"
+   CONFIGSERVER_URI: "http://configserver:8888"
+   EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+   CONFIGSERVER_PORT:   "8888"
+   DATABASESERVER_PORT: "5432"
+   EUREKASERVER_PORT:   "8761"
+   ENCRYPT_KEY:       "weerT55667SSdfg"
