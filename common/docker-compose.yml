@@ -1,12 +1,12 @@
 version: '2'
 services:
  eurekaserver:
-  image: gfioritti/sbms-eurekasr:chapter5
+  image: gfioritti/sbms-eurekasr:chapter7
   mem_limit: 512M
   ports:
    - "8761:8761"
  configserver:
-  image: gfioritti/sbms-confsvr:chapter5
+  image: gfioritti/sbms-confsvr:chapter7
   mem_limit: 512M
   ports:
    - "8888:8888"
@@ -15,7 +15,7 @@ services:
    EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
    EUREKASERVER_PORT: "8761"   
  zuulserver:
-  image: gfioritti/sbms-zuulsvr:chapter6
+  image: gfioritti/sbms-zuulsvr:chapter7
   mem_limit: 512M
   ports:
    - "5555:5555"
@@ -37,7 +37,7 @@ services:
    - POSTGRES_PASSWORD=p0stgr@s_dev
    - POSTGRES_DB=eagle_eye_dev
  organizationservice:
-  image: gfioritti/sbms-organization-service:chapter7
+  image: gfioritti/sbms-organization-service:chapter7-jwt
   mem_limit: 512M
   ports:
    - "8085:8085"
@@ -53,7 +53,7 @@ services:
    AUTHSERVER_URI_PORT: "8901"
    ENCRYPT_KEY:       "weerT55667SSdfg"
  orgservice-new:
-  image: gfioritti/sbms-orgservice-new:chapter6
+  image: gfioritti/sbms-orgservice-new:chapter7
   mem_limit: 512M
   ports:
    - "8087:8087"
@@ -67,7 +67,7 @@ services:
    CONFIGSERVER_PORT:        "8888"
    ENCRYPT_KEY:       "weerT55667SSdfg"
  specialroutes-service:
-  image: gfioritti/sbms-specialroutes-service:chapter6
+  image: gfioritti/sbms-specialroutes-service:chapter7
   mem_limit: 512M
   ports:
    - "8910:8910"
@@ -81,12 +81,12 @@ services:
    CONFIGSERVER_PORT:        "8888"
    ENCRYPT_KEY:       "weerT55667SSdfg"
  authenticationservice:
-  image: gfioritti/sbms-authentication-service:chapter7
+  image: gfioritti/sbms-authentication-service:chapter7-jwt
   mem_limit: 512M
   ports:
    - "8901:8901"
   environment:
-   PROFILE: "default"
+   PROFILE: "dev"
    SERVER_PORT: "8901"
    CONFIGSERVER_URI: "http://configserver:8888"
    EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
