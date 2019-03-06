@@ -14,8 +14,14 @@ services:
       ENCRYPT_KEY: weerT55667SSdfg
       EUREKASERVER_URI: http://eurekaserver:8761/eureka/
       EUREKASERVER_PORT: '8761'
+  zipkin:
+    image: gfioritti/sbms-zipkin-server:chapter9
+    ports:
+      - "9411:9411"
+    environment:
+      SERVER_PORT: "9411"      
   zuulserver:
-    image: gfioritti/sbms-zuulsvr:chapter7
+    image: gfioritti/sbms-zuulsvr:chapter9
     mem_limit: 512M
     ports:
     - 5555:5555
@@ -28,6 +34,8 @@ services:
       DATABASESERVER_PORT: '5432'
       CONFIGSERVER_PORT: '8888'
       ORGSERVERNEW_PORT: '8087'
+      ZIPKIN_PORT: '9411'
+      ZIPKIN_URI: "http://zipkin:9411"
   database:
     image: postgres:9.5
     ports:
@@ -37,7 +45,7 @@ services:
     - POSTGRES_PASSWORD=p0stgr@s_dev
     - POSTGRES_DB=eagle_eye_dev
   licensingservice:
-    image: gfioritti/sbms-licensing-service:chapter8
+    image: gfioritti/sbms-licensing-service:chapter9
     ports:
       - "8080:8080"
     environment:
@@ -53,9 +61,11 @@ services:
       ZUULSERVER_PORT:     "5555"
       KAFKASERVER_PORT:    "2181"
       REDIS_PORT:          "6379"
+      ZIPKIN_URI: "http://zipkin:9411"
+      ZIPKIN_PORT: "9411"
       ENCRYPT_KEY:       weerT55667SSdfg
   organizationservice:
-    image: gfioritti/sbms-organization-service:chapter8
+    image: gfioritti/sbms-organization-service:chapter9
     mem_limit: 512M
     ports:
     - 8085:8085
@@ -72,34 +82,8 @@ services:
       KAFKASERVER_URI: "kafkaserver"
       ZKSERVER_URI: "kafkaserver"
       KAFKASERVER_PORT:    "2181"
-      ENCRYPT_KEY: weerT55667SSdfg
-  orgservice-new:
-    image: gfioritti/sbms-orgservice-new:chapter7
-    mem_limit: 512M
-    ports:
-    - 8087:8087
-    environment:
-      PROFILE: default
-      SERVER_PORT: '8087'
-      CONFIGSERVER_URI: http://configserver:8888
-      EUREKASERVER_URI: http://eurekaserver:8761/eureka/
-      EUREKASERVER_PORT: '8761'
-      DATABASESERVER_PORT: '5432'
-      CONFIGSERVER_PORT: '8888'
-      ENCRYPT_KEY: weerT55667SSdfg
-  specialroutes-service:
-    image: gfioritti/sbms-specialroutes-service:chapter7
-    mem_limit: 512M
-    ports:
-    - 8910:8910
-    environment:
-      PROFILE: default
-      SERVER_PORT: '8910'
-      CONFIGSERVER_URI: http://configserver:8888
-      EUREKASERVER_URI: http://eurekaserver:8761/eureka/
-      EUREKASERVER_PORT: '8761'
-      DATABASESERVER_PORT: '5432'
-      CONFIGSERVER_PORT: '8888'
+      ZIPKIN_PORT: "9411"
+      ZIPKIN_URI: "http://zipkin:9411"
       ENCRYPT_KEY: weerT55667SSdfg
   authenticationservice:
     image: gfioritti/sbms-authentication-service:chapter7-jwt
@@ -124,3 +108,8 @@ services:
     image: redis:alpine
     ports:
       - 6379:6379
+  logspout:
+    image: gliderlabs/logspout
+    command: syslog://logs7.papertrailapp.com:15301
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock      
